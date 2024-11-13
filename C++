@@ -1,0 +1,175 @@
+Задание 1 
+#include <iostream>
+#include <cmath>
+
+int main() {
+    double k, p, r;
+    std::cout << "Введите сумму кредита (k): ";
+    std::cin >> k;
+    std::cout << "Введите процентную ставку (p): ";
+    std::cin >> p;
+    std::cout << "Введите прибыль в год (r): ";
+    std::cin >> r;
+
+    int n = 0;
+    double totalDebt = k;
+
+    while (totalDebt > r * n) {
+        n++;
+        totalDebt *= (1 + p / 100.0);
+    }
+
+    std::cout << "Предприниматель сможет погасить кредит через " << n << " лет." << std::endl;
+    return 0;
+}
+
+Задание 2 
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> times;
+    int t1, t2, t3;
+
+    std::cout << "Введите время обработки на каждом станке (группами по 3 числа, 0 для завершения):" << std::endl;
+    while (true) {
+        std::cin >> t1 >> t2 >> t3;
+        if (t1 == 0 && t2 == 0 && t3 == 0) break;
+        times.push_back(t1 + t2 + t3);
+    }
+
+    int totalTime = 0;
+    for (int time : times) {
+        totalTime += time;
+    }
+
+    std::cout << "Общее время обработки всех деталей: " << totalTime << " единиц времени." << std::endl;
+    return 0;
+}
+Задание 3 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    int T;
+    std::cout << "Введите продолжительность смены (T): ";
+    std::cin >> T;
+
+    std::vector<std::pair<int, int>> clients; // (t, l)
+    int t, l;
+
+    std::cout << "Введите момент прихода и продолжительность обслуживания (0 0 для завершения):" << std::endl;
+    while (true) {
+        std::cin >> t >> l;
+        if (t == 0 && l == 0) break;
+        clients.push_back({t, l});
+    }
+
+    int currentTime = 0;
+    int servedClients = 0;
+    int totalServiceTime = 0;
+
+    for (const auto& client : clients) {
+        if (client.first >= currentTime && currentTime + client.second <= T) {
+            currentTime += client.second;
+            servedClients++;
+            totalServiceTime += client.second;
+        }
+    }
+
+    std::cout << "Мастер обслужит " << servedClients << " клиентов." << std::endl;
+    std::cout << "Общее рабочее время: " << totalServiceTime << " единиц времени." << std::endl;
+    return 0;
+}
+
+Задание 4 
+#include <iostream>
+#include <cmath>
+
+int main() {
+    double v0, alpha, beta;
+    int n;
+    const double g = 9.81; // Ускорение свободного падения
+
+    std::cout << "Введите начальную скорость (v0): ";
+    std::cin >> v0;
+    std::cout << "Введите угол броска (alpha в градусах): ";
+    std::cin >> alpha;
+    std::cout << "Введите коэффициент уменьшения энергии (beta): ";
+    std::cin >> beta;
+    std::cout << "Введите количество касаний (n): ";
+    std::cin >> n;
+
+    // Переводим угол в радианы
+    alpha = alpha * M_PI / 180.0;
+
+    double vx = v0 * cos(alpha);
+    double vy = v0 * sin(alpha);
+    double x = 0;
+
+    for (int i = 0; i < n; ++i) {
+        double timeOfFlight = (2 * vy) / g;
+        x += vx * timeOfFlight;
+
+        // Обновляем вертикальную скорость после удара
+        vy *= sqrt(beta);
+    }
+
+    std::cout << "Абсциссы первых " << n << " точек касания: " << x << std::endl;
+    return 0;
+}
+
+Задание 5
+#include <iostream>
+#include <cmath>
+
+int main() {
+    double u, v, w, s, t, f;
+    int k;
+    double p, q, r, t_loss;
+
+    std::cout << "Введите рацион (u, v, w): ";
+    std::cin >> u >> v >> w;
+    std::cout << "Введите количество коров (k): ";
+    std::cin >> k;
+    std::cout << "Введите остатки корма (s, t, f): ";
+    std::cin >> s >> t >> f;
+    std::cout << "Введите процент погибающих коров (p): ";
+    std::cin >> p;
+    std::cout << "Введите процент сгнивающего сена (q): ";
+    std::cin >> q;
+    std::cout << "Введите процент разворовываемого силоса (r): ";
+    std::cin >> r;
+    std::cout << "Введите процент распродаваемого комбикорма (t): ";
+    std::cin >> t_loss;
+
+    double dailyFeedNeeded = k * (u + v + w);
+    double days = 0;
+
+    while (s > 0 && t > 0 && f > 0) {
+        s -= s * (q / 100);
+        t -= t * (r / 100);
+        f -= f * (t_loss / 100);
+        
+        days++;
+
+        if (s < k * u || t < k * v || f < k * w) {
+            break;
+        }
+    }
+
+    std::cout << "Кормить всех коров по полному рациону нельзя будет через " << days << " дней." << std::endl;
+    
+    if (s < k * u && (s < t * v) && (s < f * w)) {
+        std::cout << "Сено кончится первым." << std::endl;
+    } else if (t < k * v && (t < s * u) && (t < f * w)) {
+        std::cout << "Силос кончится первым." << std::endl;
+    } else if (f < k * w && (f < s * u) && (f < t * v)) {
+        std::cout << "Комбикорм кончится первым." << std::endl;
+    }
+
+    return 0;
+}
+
+
